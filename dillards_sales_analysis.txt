@@ -1,5 +1,6 @@
-Database ua_dillards;
+# These queries are used to analyze dillards sales.
 
+Database ua_dillards;
 
 # Exercise 1. How many distinct dates are there in the saledate column of the transaction
 # table for each month/year combination in the database?
