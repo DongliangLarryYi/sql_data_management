@@ -2,15 +2,14 @@
 
 Database ua_dillards;
 
-# Exercise 1. How many distinct dates are there in the saledate column of the transaction
+# How many distinct dates are there in the saledate column of the transaction
 # table for each month/year combination in the database?
 select count(distinct saledate), EXTRACT(MONTH from saledate) as month_num, EXTRACT(YEAR from saledate) as year_num
 from trnsact
 group by month_num, year_num
 order by year_num asc, month_num asc
 
-# determine which sku had the greatest total sales during the combined summer months of June, 
-# July, and August.
+# Determine which sku had the greatest total sales during the combined summer months of June, July, and August.
 select sku, sum(amt) as total_amount
 from trnsact
 WHERE stype = 'p' and (EXTRACT(MONTH from saledate) = 6 or EXTRACT(MONTH from saledate) = 7 or EXTRACT(MONTH from saledate) = 8)
@@ -24,14 +23,14 @@ from trnsact
 group by month_num, year_num, store
 order by number_date asc
 
-# modify the query that remove all data from Aug, 2005 and only include purchase in store 204
+# Modify the query that remove all data from Aug, 2005 and only include purchase in store 204
 select EXTRACT(MONTH from saledate) as month_num, EXTRACT(YEAR from saledate) as year_num, store, sum(amt)/COUNT(DISTINCT saledate) as amount
 from trnsact
 group by month_num, year_num, store
 WHERE stype = 'p' and store = '204' and (EXTRACT(MONTH from saledate) ne 8 or EXTRACT(YEAR from saledate) ne 2005)
 order by amount desc;
 
-# population statistics of the geographical location and sales performance
+# Population statistics of the geographical location and sales performance
 select count(distinct t.saledate) as number_date, EXTRACT(MONTH from t.saledate) as month_num, EXTRACT(YEAR from t.saledate) as year_num, t.store, sum(t.amt) as amount,
 (case 
 when newmsa.msa_high > 50 and newmsa.msa_high <= 60 then 'low'
@@ -45,8 +44,7 @@ group by month_num, year_num, t.store, msa_level
 order by amount desc
 having number_date >= 20
 
-# relations between average daily revenue of the stores and median msa_income of different 
-# cities
+# Relations between average daily revenue of the stores and median msa_income of different cities
 select count(distinct t.saledate) as number_date, sum(t.amt)/COUNT(DISTINCT t.saledate) as Ave_amount, newmsa.msa_income, newmsa.state, newmsa.city
 from trnsact t join (select msa_high, store, msa_income, state, city
 from store_msa) as newmsa
@@ -81,8 +79,7 @@ group by con_data.dept, con_data.store
 having nov_value is not null and dec_value is not null
 order by percentage desc
 
-# What is the city and state of the store that had the greatest decrease in
-# average daily revenue from August to September?
+# What is the city and state of the store that had the greatest decrease in average daily revenue from August to September?
 select con_data.dept, con_data.store, sum(con_data.aug_amount) as aug_value, sum(con_data.sep_amount) as sep_value, sum(con_data.sep_amount)*100/sum(con_data.aug_amount) as percentage
 from (select newdata.dept as dept, newdata.store as store, case 
 when newdata.month_num = 8 then amount
@@ -98,7 +95,7 @@ group by con_data.dept, con_data.store
 having aug_value is not null and sep_value is not null
 order by percentage desc
 
-# store’s largest monthly sales, month and year
+# Store’s largest monthly sales, month and year
 select agg_data.store, max(agg_data.month_value) 
 from (select EXTRACT(MONTH from saledate) as month_num, EXTRACT(YEAR from saledate) as year_num, store, sum(amt)/COUNT(DISTINCT saledate) as month_value
 from trnsact
@@ -106,7 +103,7 @@ group by month_num, year_num, store
 WHERE stype = 'p' and (EXTRACT(MONTH from saledate) ne 8 or EXTRACT(YEAR from saledate) ne 2005)) as agg_data 
 group by agg_data.store
 
-# store with the max sales, month and year
+# Store with the max sales, month and year
 select *
 from (select agg_data.store as newstore, max(agg_data.month_value) as newmaxvalue 
 from (select EXTRACT(MONTH from saledate) as month_num, EXTRACT(YEAR from saledate) as year_num, store, sum(amt)/COUNT(DISTINCT saledate) as month_value
