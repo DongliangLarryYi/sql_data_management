@@ -1,5 +1,5 @@
 # These queries are used to analyze dillards sales.
-
+.sql diff
 Database ua_dillards;
 
 # How many distinct dates are there in the saledate column of the transaction
