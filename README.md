@@ -1,2 +1,3 @@
-# sql_data_management
-Data management with SQL
+# SQL queries
+
+- **dillards_sales_analysis.sql:** SQL queries used to retrieve data from dillards database. 
